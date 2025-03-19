@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Camera Live Display</title>
+  <style>
+    body {
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    video {
+      display: block;
+      margin: 20px auto;
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Camera Live Display</h1>
+  <p>Click the button below to grant access to the camera:</p>
+  <button id="accessButton">Grant Access</button>
+
+  <div id="videoContainer"></div>
+
+  <script>
+    // Check if the browser supports the getUserMedia API
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      const accessButton = document.getElementById('accessButton');
+      const videoContainer = document.getElementById('videoContainer');
+
+      accessButton.addEventListener('click', async () => {
+        try {
+          // Request access to the camera
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: true
+          });
+
+          // Display the stream
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.autoplay = true;
+          video.controls = true;
+          videoContainer.appendChild(video);
+
+          // Display a message to indicate that access has been granted
+          accessButton.disabled = true;
+          accessButton.textContent = 'Access Granted';
+        } catch (error) {
+          console.error('Error accessing camera:', error);
+          accessButton.textContent = 'Access Denied';
+        }
+      });
+    } else {
+      console.error('getUserMedia is not supported in this browser.');
+    }
+  </script>
+</body>
+</html>
